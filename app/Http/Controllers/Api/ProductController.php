@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductResource;
 use App\Interfaces\ProductRepositoryInterface;
 use App\Models\Product;
 use Illuminate\Support\Facades\Validator;
@@ -27,7 +28,10 @@ class ProductController extends Controller
     {
         $products = $this->productRepository->all();
 
-        return jsonResponse($products, 200, 'Success');
+        return ProductResource::collection($products)->additional([
+            'statusCode' => 200,
+            'message' => 'Success',
+        ]);
     }
 
 
@@ -54,7 +58,11 @@ class ProductController extends Controller
         // Save new product
         $product = $this->productRepository->create($validated);
         
-        return jsonResponse($product, 200, 'Success');
+        // return jsonResponse($product, 200, 'Success');
+        return (new ProductResource($product))->additional([
+            'statusCode' => 201,
+            'message' => 'Success',
+        ])->response()->setStatusCode(201);
     }   
 
 
@@ -65,7 +73,11 @@ class ProductController extends Controller
     {
         // $product = $this->productRepository->find($id);
 
-        return jsonResponse($product, 200, 'Success');
+        // return jsonResponse($product, 200, 'Success');
+        return (new ProductResource($product))->additional([
+            'statusCode' => 200,
+            'message' => 'Success',
+        ]);
     }
 
 
@@ -92,7 +104,11 @@ class ProductController extends Controller
         // Update product
         $product = $this->productRepository->update($validated, $product);
 
-        return jsonResponse($product, 200, 'Updated product successfully');
+        // return jsonResponse($product, 200, 'Updated product successfully');
+        return (new ProductResource($product))->additional([
+            'statusCode' => 200,
+            'message' => 'Success',
+        ]);
     }
 
 
@@ -104,32 +120,6 @@ class ProductController extends Controller
         // Delete product
         $this->productRepository->delete($product);
 
-        return jsonResponse(null, 200, 'Success');
-    }
-
-
-    /**
-     * API Json Response Format
-     * 
-     * @param mixed $data Default null
-     * @param int $statusCode Default 200
-     * @param string $message Default empty string
-     * @param mixed $errors Default null
-     * 
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function jsonResponse(mixed $data = null, int $statusCode = 200, string $message = '', mixed $errors = null)
-    {
-        $responseData = [
-            'statusCode' => $statusCode,
-            'results' => $data,
-            'message' => $message,
-        ];
-
-        if (!empty($errors)) {
-            $responseData['errors'] = $errors;
-        }
-
-        return response()->json($responseData, $statusCode);
+        return jsonResponse(null, 204, 'Success');
     }
 }

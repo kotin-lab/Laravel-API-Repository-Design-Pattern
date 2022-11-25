@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 
@@ -85,6 +86,9 @@ class PassportAuthController extends Controller
     {
         $user = auth()->user();
 
-        return jsonResponse($user, 200, 'Success');
+        return (new UserResource($user))->additional([
+            'statusCode' => 200,
+            'message' => 'Success'
+        ]);
     }
 }
