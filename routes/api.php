@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\Api\PassportAuthController;
-use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\PassportAuthController;
+use App\Http\Controllers\Api\ProductSearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,9 +26,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('register', [PassportAuthController::class, 'register']);
 Route::post('login', [PassportAuthController::class, 'login']);
 
+// Search product
+Route::get('products/search', [ProductSearchController::class, 'search']);
+
 Route::middleware('auth:api')->group(function() {
     Route::get('get-user', [PassportAuthController::class, 'userInfo']);
+    
+    // Products
     Route::apiResource('products', ProductController::class);
+
+    // Categories
+    Route::apiResource('categories', CategoryController::class);
 });
 
 // Fallback route

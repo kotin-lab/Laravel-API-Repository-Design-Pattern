@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginUserRequest;
+use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -14,23 +16,10 @@ class PassportAuthController extends Controller
     /**
      * Registration
      */
-    public function register(Request $request)
+    public function register(StoreUserRequest $request)
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'name' => 'required|min:4',
-            'email' => 'required|email',
-            'password' => 'required|min:8',
-            'c_password' => 'required|same:password',
-        ]);
-
-        // Check validation failed
-        if ($validator->fails()) {
-            return jsonResponse(null, 400, 'Validation error', $validator->errors());
-        }
-
         // Validate fields
-        $validated = $validator->validated();
+        $validated = $request->validated();
 
         // Create new user
         $user = User::create([
@@ -51,21 +40,10 @@ class PassportAuthController extends Controller
     /**
      * Login
      */
-    public function login(Request $request)
+    public function login(LoginUserRequest $request)
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [
-            'email' => 'required|email',
-            'password' => 'required|min:8',
-        ]);
-
-        // Check validation failed
-        if ($validator->fails()) {
-            return jsonResponse(null, 400, 'Validation error', $validator->errors());
-        }
-
         // Validate fields
-        $validated = $validator->validated();
+        $validated = $request->validated();
 
         if (auth()->attempt($validated)) {
             $token = auth()->user()->createToken('Laravel8PassportAuth')->accessToken;

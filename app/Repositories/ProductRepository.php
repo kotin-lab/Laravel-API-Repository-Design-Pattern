@@ -9,10 +9,19 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class ProductRepository implements ProductRepositoryInterface
 {
     protected $model;
+    public $per_page;
 
+    /**
+     * Class constructor
+     */
     public function __construct(Product $product)
     {
         $this->model = $product;
+
+        // Set per_page
+        request()->whenFilled('per_page', function($input) {
+            $this->per_page = $input;
+        });
     }
 
 
@@ -21,7 +30,7 @@ class ProductRepository implements ProductRepositoryInterface
      */
     public function all()
     {
-        return $this->model->all();
+        return $this->model->with('category')->paginate($this->per_page);
     }
 
 
@@ -76,5 +85,33 @@ class ProductRepository implements ProductRepositoryInterface
         }
 
         return $product;
+    }
+
+    /**
+     * Search product
+     */
+    public function search()
+    {
+        // Base query
+        $query = $this->model->with('category');
+        
+        // If search
+        if (request()->filled('s')) {
+            $search = request()->get('s');
+            
+            $query->where('name', 'like', "%{$search}%")
+            ->orWhere('detail', 'like', "%{$search}%");
+        }
+        
+        // If cat_id
+        if (request()->filled('cat_id')) {
+            $cat_id = request()->get('cat_id');
+
+            $query->where('cat_id', $cat_id); // Where cat_id query
+        }
+
+        $products = $query->paginate($this->per_page); // Paginate
+
+        return $products;
     }
 }

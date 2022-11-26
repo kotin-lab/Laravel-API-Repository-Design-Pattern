@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Interfaces\CategoryRepositoryInterface;
 use App\Repositories\ProductRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Interfaces\ProductRepositoryInterface;
+use App\Repositories\CategoryRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -15,7 +17,17 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
+        // Product repository
+        $this->app->bind(
+            ProductRepositoryInterface::class, 
+            ProductRepository::class
+        );
+
+        // Category repository
+        $this->app->bind(
+            CategoryRepositoryInterface::class,
+            CategoryRepository::class
+        );
     }
 
     /**

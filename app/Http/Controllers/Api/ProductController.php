@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Product;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
+use App\Http\Requests\StoreProductRequest;
 use App\Interfaces\ProductRepositoryInterface;
-use App\Models\Product;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -38,22 +38,10 @@ class ProductController extends Controller
     /**
      * Create product
      */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        $input = $request->all();
-
-        $validator = Validator::make($input, [
-            'name' => 'required',
-            'detail' => 'required'
-        ]);
-
-        // If validation failed
-        if ($validator->fails()) {
-            return jsonResponse(null, 400, 'Validation error', $validator->errors());
-        }
-
         // Validate request fields.
-        $validated = $validator->validated();
+        $validated = $request->validated();
 
         // Save new product
         $product = $this->productRepository->create($validated);
@@ -84,22 +72,10 @@ class ProductController extends Controller
     /**
      * Update product
      */
-    public function update(Request $request, Product $product)
+    public function update(StoreProductRequest $request, Product $product)
     {
-        $input = $request->all();
-
-        $validator = Validator::make($input, [
-            'name' => 'required',
-            'detail' => 'required'
-        ]);
-
-        // If validation failed
-        if ($validator->fails()) {
-            return jsonResponse(null, 400, 'Validation error', $validator->errors());
-        }
-
         // Validate request fields.
-        $validated = $validator->validated();
+        $validated = $request->validated();
 
         // Update product
         $product = $this->productRepository->update($validated, $product);
