@@ -31,6 +31,8 @@ Route::get('products/search', [ProductSearchController::class, 'search']);
 
 Route::middleware('auth:api')->group(function() {
     Route::get('get-user', [PassportAuthController::class, 'userInfo']);
+    // Logout user
+    Route::get('logout-user', [PassportAuthController::class, 'logout']);
     
     // Products
     Route::apiResource('products', ProductController::class);

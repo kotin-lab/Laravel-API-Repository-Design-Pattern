@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 
@@ -68,5 +69,16 @@ class PassportAuthController extends Controller
             'statusCode' => 200,
             'message' => 'Success'
         ]);
+    }
+
+    /**
+     * Logout
+     */
+    public function logout()
+    {
+        $token = Auth::user()->token();
+        $token->revoke();
+
+        return jsonResponse(null, 200, 'User logout uccessfully');
     }
 }
