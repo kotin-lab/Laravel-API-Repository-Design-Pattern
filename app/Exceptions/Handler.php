@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Auth\AuthenticationException;
 
 class Handler extends ExceptionHandler
 {
@@ -61,5 +62,15 @@ class Handler extends ExceptionHandler
         }
 
         return parent::render($request, $e);
+    }
+ 
+    /**
+     * 
+     */
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        return $request->expectsJson()
+            ? jsonResponse(null, 401, $exception->getMessage())
+            : redirect()->guest(route('login'));
     }
 }
