@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\ArticleController;
+use App\Http\Controllers\Api\ArticleSearchController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
@@ -29,6 +31,9 @@ Route::post('login', [PassportAuthController::class, 'login']);
 // Search product
 Route::get('products/search', [ProductSearchController::class, 'search']);
 
+// Search article
+Route::get('articles/search', [ArticleSearchController::class, 'search']);
+
 Route::middleware('auth:api')->group(function() {
     Route::get('get-user', [PassportAuthController::class, 'userInfo']);
     // Logout user
@@ -39,6 +44,9 @@ Route::middleware('auth:api')->group(function() {
 
     // Categories
     Route::apiResource('categories', CategoryController::class);
+
+    // Articles
+    Route::apiResource('articles', ArticleController::class);
 });
 
 // Fallback route

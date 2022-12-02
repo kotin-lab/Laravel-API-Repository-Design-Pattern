@@ -57,4 +57,14 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         return $category->delete();
     }
+    
+    /**
+     * Show category
+     * 
+     * @param int $id
+     */
+    public function find($id)
+    {
+        return $this->model->findOrFail($id);
+    }
 }

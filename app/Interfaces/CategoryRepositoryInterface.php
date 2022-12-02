@@ -10,4 +10,5 @@ interface CategoryRepositoryInterface
     public function create(array $data);
     public function update(array $data, Category $category);
     public function delete(Category $category);
+    public function find($id);
 }

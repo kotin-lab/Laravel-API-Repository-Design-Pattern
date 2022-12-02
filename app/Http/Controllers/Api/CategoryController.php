@@ -75,4 +75,17 @@ class CategoryController extends Controller
         // Return 204 No Content
         return jsonResponse(null, 204, 'Success');
     }
+    
+    /**
+     * Show category
+     */
+    public function show($id)
+    {
+        $category = $this->categoryRepository->find($id);
+
+        return (new CategoryResource($category))->additional([
+            'statusCode' => 200,
+            'message' => 'Success',
+        ]);
+    }
 }
